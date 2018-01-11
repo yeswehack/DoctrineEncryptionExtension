@@ -1,0 +1,29 @@
+---
+Yaml\ArticleProtectedKey:
+  type: entity
+  table: article_protected_key_yaml
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  ywh:
+    encryptable: true
+  fields:
+    title:
+      type: string
+      length: 255
+    encryptionKey:
+      column: encryption_key
+      type: text
+      ywh:
+        encryptionKey:
+          usePassword: true
+    encrypted:
+      type: text
+      ywh:
+        encrypted:
+          type: string
+  indexes:
+    search_idx:
+      columns: title
