@@ -41,6 +41,7 @@ class Yaml extends File implements Driver
         if (isset($mapping['ywh'])) {
             $classMapping = $mapping['ywh'];
             if (isset($classMapping['encryptable'])) {
+                $config['usePassword'] = $classMapping['encryptable']['usePassword'];
                 if (isset($mapping['fields'])) {
                     foreach ($mapping['fields'] as $field => $fieldMapping) {
                         if (isset($fieldMapping['ywh']['encrypted'])) {
@@ -49,7 +50,7 @@ class Yaml extends File implements Driver
                                 throw new InvalidMappingException("Unable to find 'encrypted field' - [{$field}] as mapped property in entity - {$meta->name}");
                             }
                             if (!$this->isValidFieldType($meta, $field)) {
-                                throw new InvalidMappingException("Encrypted field - [{$field}] type is not valid and must be 'text' in class - {$meta->name}");
+                                throw new InvalidMappingException("Encrypted field - [{$field}] type is not valid and must be 'text' in entity - {$meta->name}");
                             }
                             $config['fields'][] = array(
                                 'field' => $field,
@@ -62,18 +63,15 @@ class Yaml extends File implements Driver
                                 throw new InvalidMappingException("Unable to find 'encryption key field' - [{$field}] as mapped property in entity - {$meta->name}");
                             }
                             if (!$this->isValidFieldType($meta, $field)) {
-                                throw new InvalidMappingException("Encryption key field - [{$field}] type is not valid and must be 'text' in class - {$meta->name}");
+                                throw new InvalidMappingException("Encryption key field - [{$field}] type is not valid and must be 'text' in entity - {$meta->name}");
                             }
-                            $config['keyField'] = array(
-                                'field' => $field,
-                                'usePassword' => $mappingProperty['usePassword'],
-                            );
+                            $config['keyField'] = $field;
                         }
                     }
                 }
 
-                if (!isset($config['keyField'])) {
-                    throw new InvalidMappingException("You need to map a key field as the encryption key field to activate encryption.");
+                if ($config['usePassword'] && !isset($config['keyField'])) {
+                    throw new InvalidMappingException("You need to map a key field as the encryption key to use a key protected by password in entity - {$meta->name}");
                 }
             }
         }

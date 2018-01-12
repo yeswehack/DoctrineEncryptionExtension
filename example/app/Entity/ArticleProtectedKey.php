@@ -9,7 +9,7 @@ use YWH\Encryptable\Mapping\Annotation as YWH;
  * @ORM\Table(name="article_protected_key")
  * @ORM\Entity()
  *
- * @YWH\Encryptable
+ * @YWH\Encryptable(usePassword=true)
  */
 class ArticleProtectedKey
 {
@@ -28,7 +28,7 @@ class ArticleProtectedKey
     /**
      * @ORM\Column(name="encryption_key", type="text")
      *
-     * @YWH\EncryptionKey(usePassword=true)
+     * @YWH\EncryptionKey
      */
     private $encryptionKey;
 

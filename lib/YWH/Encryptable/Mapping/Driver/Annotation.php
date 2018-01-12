@@ -27,6 +27,8 @@ class Annotation extends AbstractAnnotationDriver
         $class = $this->getMetaReflectionClass($meta);
 
         if ($annotation = $this->reader->getClassAnnotation($class, self::ENCRYPTABLE)) {
+            $config['usePassword'] = $annotation->usePassword;
+
             foreach ($class->getProperties() as $property) {
                 if ($meta->isMappedSuperclass && !$property->isPrivate() ||
                     $meta->isInheritedField($property->name) ||
@@ -42,7 +44,7 @@ class Annotation extends AbstractAnnotationDriver
                         throw new InvalidMappingException("Unable to find 'encrypted field' - [{$field}] as mapped property in entity - {$meta->name}");
                     }
                     if (!$this->isValidFieldType($meta, $field)) {
-                        throw new InvalidMappingException("Encrypted field - [{$field}] type is not valid and must be 'text' in class - {$meta->name}");
+                        throw new InvalidMappingException("Encrypted field - [{$field}] type is not valid and must be 'text' in entity - {$meta->name}");
                     }
                     $config['fields'][] = array(
                         'field' => $field,
@@ -57,17 +59,14 @@ class Annotation extends AbstractAnnotationDriver
                         throw new InvalidMappingException("Unable to find 'encryption key field' - [{$field}] as mapped property in entity - {$meta->name}");
                     }
                     if (!$this->isValidFieldType($meta, $field)) {
-                        throw new InvalidMappingException("Encryption key field - [{$field}] type is not valid and must be 'text' in class - {$meta->name}");
+                        throw new InvalidMappingException("Encryption key field - [{$field}] type is not valid and must be 'text' in entity - {$meta->name}");
                     }
-                    $config['keyField'] = array(
-                        'field' => $field,
-                        'usePassword' => $fieldAnnotation->usePassword,
-                    );
+                    $config['keyField'] = $field;
                 }
             }
 
-            if (!isset($config['keyField'])) {
-                throw new InvalidMappingException("You need to map a key field as the encryption key field to activate encryption.");
+            if ($config['usePassword'] && !isset($config['keyField'])) {
+                throw new InvalidMappingException("You need to map a key field as the encryption key to use a key protected by password in entity - {$meta->name}");
             }
         }
     }

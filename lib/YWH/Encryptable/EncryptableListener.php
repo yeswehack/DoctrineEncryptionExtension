@@ -73,11 +73,11 @@ class EncryptableListener extends MappedEventSubscriber
         $meta = $om->getClassMetadata(get_class($object));
 
         if ($config = $this->getConfiguration($om, $meta->name)) {
-            if (isset($config['keyField']) && isset($config['keyField']['field']) &&
-                null === $meta->getReflectionProperty($config['keyField']['field'])->getValue($object)
+            if ($config['usePassword'] && isset($config['keyField']) &&
+                null === $meta->getReflectionProperty($config['keyField'])->getValue($object)
             ) {
-                $key = $this->encryptor->generateKey($config['keyField']['usePassword']);
-                $meta->getReflectionProperty($config['keyField']['field'])->setValue($object, $key);
+                $key = $this->encryptor->generateKey(true);
+                $meta->getReflectionProperty($config['keyField'])->setValue($object, $key);
             }
         }
     }
@@ -206,8 +206,8 @@ class EncryptableListener extends MappedEventSubscriber
     {
         $oid = spl_object_hash($entity);
         if (!isset($this->keys[$oid][$meta->name])) {
-            if ($config['keyField']['usePassword']) {
-                $reflectionProperty = $meta->getReflectionProperty($config['keyField']['field']);
+            if ($config['usePassword']) {
+                $reflectionProperty = $meta->getReflectionProperty($config['keyField']);
                 $this->keys[$oid][$meta->name] = $this->encryptor->getKeyProtectedWithPassword($reflectionProperty->getValue($entity));
             } else {
                 $this->keys[$oid][$meta->name] = $this->encryptor->getKey();

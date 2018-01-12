@@ -15,4 +15,6 @@ use Doctrine\Common\Annotations\Annotation;
  */
 final class Encryptable
 {
+    /** @var bool */
+    public $usePassword = true;
 }

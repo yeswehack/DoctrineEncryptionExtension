@@ -20,11 +20,6 @@ class ArticleSimpleKey
     /**
      * @var string
      */
-    private $encryptionKey;
-
-    /**
-     * @var string
-     */
     private $encrypted;
 
     public function getId()
@@ -50,15 +45,5 @@ class ArticleSimpleKey
     public function getEncrypted()
     {
         return $this->encrypted;
-    }
-
-    public function setEncryptionKey($encryptionKey)
-    {
-        $this->encryptionKey = $encryptionKey;
-    }
-
-    public function getEncryptionKey()
-    {
-        return $this->encryptionKey;
     }
 }

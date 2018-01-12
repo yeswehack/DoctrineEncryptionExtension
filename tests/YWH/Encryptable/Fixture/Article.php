@@ -8,7 +8,7 @@ use YWH\Encryptable\Mapping\Annotation as YWH;
 /**
  * @ORM\Entity
  *
- * @YWH\Encryptable()
+ * @YWH\Encryptable(usePassword=true)
  */
 class Article
 {

@@ -8,17 +8,12 @@ Yaml\ArticleSimpleKey:
       generator:
         strategy: AUTO
   ywh:
-    encryptable: true
+    encryptable:
+      usePassword: false
   fields:
     title:
       type: string
       length: 255
-    encryptionKey:
-      column: encryption_key
-      type: text
-      ywh:
-        encryptionKey:
-          usePassword: false
     encrypted:
       type: text
       ywh:

@@ -8,7 +8,8 @@ Yaml\ArticleProtectedKey:
       generator:
         strategy: AUTO
   ywh:
-    encryptable: true
+    encryptable:
+      usePassword: true
   fields:
     title:
       type: string
@@ -17,8 +18,7 @@ Yaml\ArticleProtectedKey:
       column: encryption_key
       type: text
       ywh:
-        encryptionKey:
-          usePassword: true
+        encryptionKey: true
     encrypted:
       type: text
       ywh:

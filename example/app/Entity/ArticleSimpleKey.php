@@ -9,7 +9,7 @@ use YWH\Encryptable\Mapping\Annotation as YWH;
  * @ORM\Table(name="article_simple_key")
  * @ORM\Entity()
  *
- * @YWH\Encryptable
+ * @YWH\Encryptable(usePassword=false)
  */
 class ArticleSimpleKey
 {
@@ -24,13 +24,6 @@ class ArticleSimpleKey
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
-
-    /**
-     * @ORM\Column(name="encryption_key", type="text")
-     *
-     * @YWH\EncryptionKey(usePassword=false)
-     */
-    private $encryptionKey;
 
     /**
      * @ORM\Column(name="encrypted", type="text")
@@ -62,15 +55,5 @@ class ArticleSimpleKey
     public function getEncrypted()
     {
         return $this->encrypted;
-    }
-
-    public function setEncryptionKey($encryptionKey)
-    {
-        $this->encryptionKey = $encryptionKey;
-    }
-
-    public function getEncryptionKey()
-    {
-        return $this->encryptionKey;
     }
 }
