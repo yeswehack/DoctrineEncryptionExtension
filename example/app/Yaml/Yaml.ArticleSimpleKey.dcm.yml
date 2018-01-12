@@ -1,0 +1,24 @@
+---
+Yaml\ArticleSimpleKey:
+  type: entity
+  table: article_simple_key_yaml
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  ywh:
+    encryptable:
+      usePassword: false
+  fields:
+    title:
+      type: string
+      length: 255
+    encrypted:
+      type: text
+      ywh:
+        encrypted:
+          type: string
+  indexes:
+    search_idx:
+      columns: title
