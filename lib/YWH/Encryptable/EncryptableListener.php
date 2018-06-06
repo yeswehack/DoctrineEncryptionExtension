@@ -179,17 +179,19 @@ class EncryptableListener extends MappedEventSubscriber
 
             $value = $reflectionProperty->getValue($entity);
 
-            if (self::ENCRYPT == $operation) {
-                $value = $type->convertToDatabaseValue($value, $om->getConnection()->getDatabasePlatform());
+            if (null !== $value) {
+                if (self::ENCRYPT === $operation) {
+                    $value = $type->convertToDatabaseValue($value, $om->getConnection()->getDatabasePlatform());
+                }
+
+                $newValue = $this->encryptor->$operation($value, $key);
+
+                if (self::DECRYPT === $operation) {
+                    $newValue = $type->convertToPHPValue($newValue, $om->getConnection()->getDatabasePlatform());
+                }
+
+                $reflectionProperty->setValue($entity, $newValue);
             }
-
-            $newValue = $this->encryptor->$operation($value, $key);
-
-            if (self::DECRYPT === $operation) {
-                $newValue = $type->convertToPHPValue($newValue, $om->getConnection()->getDatabasePlatform());
-            }
-
-            $reflectionProperty->setValue($entity, $newValue);
         }
     }
 
