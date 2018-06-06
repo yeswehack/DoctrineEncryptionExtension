@@ -69,6 +69,22 @@ class EncryptableTest extends BaseTestCaseORM
         $this->assertSame($article->getTitle(), 'Test');
     }
 
+    public function testProcessOnNullField()
+    {
+        $article = new Article();
+        $article->setTitle(null);
+
+        $this->em->persist($article);
+        $this->em->flush();
+        $this->em->clear();
+
+        $insertedId = $article->getId();
+
+        $article = $this->em->getRepository(self::ARTICLE)->find($insertedId);
+
+        $this->assertNull($article->getTitle() );
+    }
+
     public function testEncryption()
     {
         $article = new Article();
