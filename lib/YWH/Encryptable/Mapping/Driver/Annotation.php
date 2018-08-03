@@ -28,6 +28,7 @@ class Annotation extends AbstractAnnotationDriver
 
         if ($annotation = $this->reader->getClassAnnotation($class, self::ENCRYPTABLE)) {
             $config['usePassword'] = $annotation->usePassword;
+            $config['encryptKey'] = $annotation->encryptKey;
 
             foreach ($class->getProperties() as $property) {
                 if ($meta->isMappedSuperclass && !$property->isPrivate() ||
@@ -63,6 +64,14 @@ class Annotation extends AbstractAnnotationDriver
                     }
                     $config['keyField'] = $field;
                 }
+            }
+
+            if ($config['usePassword'] && $config['encryptKey']) {
+                throw new InvalidMappingException("You cannot use both key protected by password and key encrypted in entity - {$meta->name}");
+            }
+
+            if ($config['encryptKey'] && !isset($config['keyField'])) {
+                throw new InvalidMappingException("You need to map a key field as the encryption key to use a encrypted key in entity - {$meta->name}");
             }
 
             if ($config['usePassword'] && !isset($config['keyField'])) {

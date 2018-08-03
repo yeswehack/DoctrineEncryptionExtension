@@ -41,7 +41,8 @@ class Yaml extends File implements Driver
         if (isset($mapping['ywh'])) {
             $classMapping = $mapping['ywh'];
             if (isset($classMapping['encryptable'])) {
-                $config['usePassword'] = $classMapping['encryptable']['usePassword'];
+                $config['usePassword'] = isset($classMapping['encryptable']['usePassword']) ? $classMapping['encryptable']['usePassword'] : false;
+                $config['encryptKey'] = isset($classMapping['encryptable']['encryptKey']) ? $classMapping['encryptable']['encryptKey'] : false;
                 if (isset($mapping['fields'])) {
                     foreach ($mapping['fields'] as $field => $fieldMapping) {
                         if (isset($fieldMapping['ywh']['encrypted'])) {
@@ -68,6 +69,14 @@ class Yaml extends File implements Driver
                             $config['keyField'] = $field;
                         }
                     }
+                }
+
+                if ($config['usePassword'] && $config['encryptKey']) {
+                    throw new InvalidMappingException("You cannot use both key protected by password and key encrypted in entity - {$meta->name}");
+                }
+
+                if ($config['encryptKey'] && !isset($config['keyField'])) {
+                    throw new InvalidMappingException("You need to map a key field as the encryption key to use a encrypted key in entity - {$meta->name}");
                 }
 
                 if ($config['usePassword'] && !isset($config['keyField'])) {

@@ -68,9 +68,9 @@ class DefuseEncryptor implements EncryptorInterface
     /**
      * {@inheritdoc}
      */
-    public function getKey()
+    public function getKey($safeString = null)
     {
-        return Key::loadFromAsciiSafeString($this->key);
+        return Key::loadFromAsciiSafeString($safeString ? $safeString : $this->key);
     }
 
     /**

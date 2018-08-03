@@ -3,7 +3,7 @@
 namespace YWH\Encryptable\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use YWH\Mapping\Annotation as YWH;
+use YWH\Encryptable\Mapping\Annotation as YWH;
 
 /**
  * Trait EncryptableKeyEntity
