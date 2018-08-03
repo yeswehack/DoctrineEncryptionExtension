@@ -2,6 +2,7 @@
 
 namespace YWH\Encryptable;
 
+use Defuse\Crypto\Key;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -78,6 +79,12 @@ class EncryptableListener extends MappedEventSubscriber
             ) {
                 $key = $this->encryptor->generateKey(true);
                 $meta->getReflectionProperty($config['keyField'])->setValue($object, $key);
+            } else if ($config['encryptKey'] && isset($config['keyField']) &&
+                null === $meta->getReflectionProperty($config['keyField'])->getValue($object)
+            ) {
+                $key = $this->encryptor->generateKey(false);
+                $encryptedKey = $this->encryptor->encrypt($key, $this->encryptor->getKey());
+                $meta->getReflectionProperty($config['keyField'])->setValue($object, $encryptedKey);
             }
         }
     }
@@ -211,6 +218,11 @@ class EncryptableListener extends MappedEventSubscriber
             if ($config['usePassword']) {
                 $reflectionProperty = $meta->getReflectionProperty($config['keyField']);
                 $this->keys[$oid][$meta->name] = $this->encryptor->getKeyProtectedWithPassword($reflectionProperty->getValue($entity));
+            } elseif ($config['encryptKey']) {
+                $reflectionProperty = $meta->getReflectionProperty($config['keyField']);
+                $encryptedKey = $reflectionProperty->getValue($entity);
+                $decryptedKey = $this->encryptor->decrypt($encryptedKey, $this->encryptor->getKey());
+                $this->keys[$oid][$meta->name] = $this->encryptor->getKey($decryptedKey);
             } else {
                 $this->keys[$oid][$meta->name] = $this->encryptor->getKey();
             }
