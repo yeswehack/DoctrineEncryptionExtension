@@ -37,7 +37,7 @@ interface EncryptorInterface
      *
      * @return Key
      */
-    public function getKey();
+    public function getKey($safeString = null);
 
     /**
      * Load an encryption key protected with password from a safe string and unlock it

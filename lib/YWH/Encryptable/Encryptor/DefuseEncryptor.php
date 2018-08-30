@@ -44,6 +44,10 @@ class DefuseEncryptor implements EncryptorInterface
      */
     public function encrypt($data, Key $key)
     {
+        if (null === $data) {
+            return null;
+        }
+
         try {
             return Crypto::encrypt($data, $key);
         } catch (EnvironmentIsBrokenException $e) {
@@ -56,6 +60,10 @@ class DefuseEncryptor implements EncryptorInterface
      */
     public function decrypt($data, Key $key)
     {
+        if (null === $data) {
+            return null;
+        }
+
         try {
             return Crypto::decrypt($data, $key);
         } catch (EnvironmentIsBrokenException $e) {
@@ -68,9 +76,9 @@ class DefuseEncryptor implements EncryptorInterface
     /**
      * {@inheritdoc}
      */
-    public function getKey()
+    public function getKey($safeString = null)
     {
-        return Key::loadFromAsciiSafeString($this->key);
+        return Key::loadFromAsciiSafeString($safeString ? $safeString : $this->key);
     }
 
     /**
