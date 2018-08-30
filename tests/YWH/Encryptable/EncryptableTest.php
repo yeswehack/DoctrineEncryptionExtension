@@ -82,7 +82,7 @@ class EncryptableTest extends BaseTestCaseORM
 
         $article = $this->em->getRepository(self::ARTICLE)->find($insertedId);
 
-        $this->assertNull($article->getTitle() );
+        $this->assertNull($article->getTitle());
     }
 
     public function testEncryption()

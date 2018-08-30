@@ -72,4 +72,18 @@ class DefuseEncryptorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($data, $decrypted);
     }
+
+    public function testNullFieldEncryption()
+    {
+        $data = null;
+        $key = $this->encryptor->getKey();
+
+        $encrypted = $this->encryptor->encrypt($data, $key);
+
+        $this->assertNull($encrypted);
+
+        $decrypted = $this->encryptor->decrypt($encrypted, $key);
+
+        $this->assertNull($decrypted);
+    }
 }
